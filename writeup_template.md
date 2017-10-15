@@ -61,7 +61,9 @@ As we can see, all datasets have the same distributions
 
 Data processing was done in two steps:
 
-* Adaptive ihistogram equalisation [CLAHE](https://www.wikiwand.com/en/Adaptive_histogram_equalization) algorithm. It improves the image contrast by computing histograms for diffrent parts and redistributes lightness over the image. It is done in three steps (taken from [here](https://stackoverflow.com/questions/31998428/opencv-python-equalizehist-colored-image)):
+* Adaptive histogram equalisation [CLAHE](https://www.wikiwand.com/en/Adaptive_histogram_equalization). This method improves the image contrast by computing histograms for diffrent parts and redistributes lightness over the image. In the case of German Traffic Sign Database, many images are too dark or too bright, hence brightness balancing will potentially help to make datasets more uniform and improve classification accuracy.
+
+The described procedure can be done in three steps (taken from [here](https://stackoverflow.com/questions/31998428/opencv-python-equalizehist-colored-image)):
     * Conversion to [YUV color space](https://en.wikipedia.org/wiki/YUV)
     * CLAHE algorithm is applied to Y channel
     * Conversion back to BGR color space
@@ -70,24 +72,25 @@ I used `opencv` library functions (in particular `cv2.createCLAHE` for histogram
 
 * Normalisation step. I did it using the formula from [wiki article](https://en.wikipedia.org/wiki/Normalization_(image_processing)) for linear normalisation. 
 
-Here is the example of appying these steps to an image:
+Here is the example of appying these steps to a traffic sign image:
 
 ![Data processing][image2]
 
-As a last step, I normalized the image data because ...
+The German Traffic Sign Database is very nonuniform, i.e. it contains more images of one traffic sign type than another. In addition the images belonging to one class can be very different from neural network point of view, i.e. the sign can be blurred, or shifted, or seen from different angles (which causes perspective distortion), etc. To model the data variations within a single class I decided to augment a dataset. Data augmentation was done in several ways:
 
-I decided to generate additional data because ... 
+* **rotation** by a random angle (between -20 and 20 degrees) - models basic uncertainty of the sign angle with respect to the picture frame.
+* **translations** - models traffic signs at different positions on the picture
+* **affine transformation** - models perspective distortion effect ()
+* **brightness variation** - models variation of brightness level for original dataset
+* their combinations
 
-To add more data to the the data set, I used the following techniques because ... 
-
-Here is an example of an original image and an augmented image:
+Here is an example of an original image and an augmented image with methods listed above:
 
 ![alt text][image3]
 
-The difference between the original data set and the augmented data set is the following ... 
+To get the augmented dataset I randomly apply transformations listed above to each element of the original dataset and stack them together. The augmented dataset contains two times more images than the original one, i.e. its shape`(69598, 32, 32, 3)`.
 
-
-####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+#### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
 My final model consisted of the following layers:
 
