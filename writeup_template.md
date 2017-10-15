@@ -118,8 +118,8 @@ My final model consisted of the following layers:
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 * Data augmentation was done at each epoch. The idea
-* Optimiser type: [Adam Optimiser]() - based on [this](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
-* Batch size: 128 - I just left a default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
+* Optimiser type: [Adam Optimiser]() - in [CS231n](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
+* Batch size: 128 - I left a default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
 * Learning rate. I reduced learning rate with the number of epochs in the following way:
     * 0 - 30 epochs: 0.001
     * 30 - 60 epochs: 0.0001
@@ -127,7 +127,7 @@ My final model consisted of the following layers:
   
   The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it should help with improving training accuracy.
 
-####4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
 * training set accuracy of ?
@@ -191,6 +191,6 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 For the second image ... 
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
 
