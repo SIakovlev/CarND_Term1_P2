@@ -1,1 +1,2 @@
-# CarND_Term1_P2
+# Self-Driving Cars Nanodegree
+## Project 2: Traffic Sign Classifier 
