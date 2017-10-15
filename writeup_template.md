@@ -96,21 +96,36 @@ My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
+| Input         		| 32x32x3 RGB image   							      | 
+| Convolution 1: 5x5x18    | 1x1 stride, valid padding, outputs 28x28x18 	|
+| RELU					|												            |
+| Max pooling	      | 2x2 stride,  outputs 14x14x18 				      |
+| Convolution 2: 3x3x48	   | 1x1 stride, valid padding, outputs 12x12x48   |
+| RELU					|												            |
+| Max pooling	      | 2x2 stride,  outputs 6x6x48 				      |
+| Convolution 3: 3x3x96	   | 1x1 stride, valid padding, outputs 4x4x96   |
+| RELU					|												            |
+| Max pooling	      | 2x2 stride,  outputs 2x2x96 				      |
+| Fully connected		| Input: 5640, outputs: 688        					|
+| RELU					|												            |
+| Dropout            | Keep rate: 0.5                                |
+| Fully connected		| Input: 688, outputs: 86        					|
+| RELU					|												            |
+| Dropout            | Keep rate: 0.5                                |
+| Fully connected		| Input: 86, outputs: 43        					|
+| Softmax				|         									|
  
+#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-
-####3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-To train the model, I used an ....
+* Data augmentation was done at each epoch. The idea
+* Optimiser type: [Adam Optimiser]() - based on [this](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
+* Batch size: 128 - I just left a default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
+* Learning rate. I reduced learning rate with the number of epochs in the following way:
+    * 0 - 30 epochs: 0.001
+    * 30 - 60 epochs: 0.0001
+    * 60 - 100 epochs: 0.00001
+  
+  The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it should help with improving training accuracy.
 
 ####4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
