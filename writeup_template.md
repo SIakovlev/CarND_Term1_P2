@@ -117,15 +117,19 @@ My final model consisted of the following layers:
  
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-* Data augmentation was done at each epoch. The idea
 * Optimiser type: [Adam Optimiser]() - in [CS231n](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
-* Batch size: 128 - I left a default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
-* Learning rate. I reduced learning rate with the number of epochs in the following way:
-    * 0 - 30 epochs: 0.001
+* Batch size: 128 - I left default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
+
+* Data augmentation is done at each epoch. The function `set_augment(X)` randomly chooses the method for image augmentation. Therefore, each augmentation is random, which allows to avoid overfitting and keep the augmented part of training dataset constantly changing. As result, it forces a neural network to generalise. The disadvantage of this method is that for large datasets it might be very demanding to memory. The augmentation scheme is the following:
+    * 0 - 30 epochs: training dataset is changing
+    * 30 - 60 epochs: training dataset is changing
+    * 60 - 100 epochs: training dataset is constant
+* Learning rate. The learning rate is reduced with the number of epochs:
+    * 0 - 30 epochs: 0.001 
     * 30 - 60 epochs: 0.0001
     * 60 - 100 epochs: 0.00001
   
-  The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it should help with improving training accuracy.
+  The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it helps with improving training accuracy. The `Traffic_Sign_Classifier.ipynb` file contains training information at each epoch and it is noticeable that after lowering training rate, the accuracy on training set grows monotonically.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -135,11 +139,16 @@ My final model results were:
 * test set accuracy of ?
 
 If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+* The first architecture I tried was LeNet that we used for MNIST dataset in the lab and the accuracy was about 89% on test dataset. There were a few problems I have noticed:
+    * Overfitting, i.e. training accuracy was much higher than validation accuracy
+    * Small network capacity, i.e. training accuracy does not achieve at least 99%. In other words this architecture does not allow to quickly learn all the details from given dataset.
+* To avoid overfitting I added two dropout layers (see architecture description above). To resolve the second problem a one convolution layer was added and output of each convolution layer was connected to the first fully connected layer. The last architectural solution was borrowed from the [paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) by Pierre Sermanet and Yann LeCun. The new architecture provides with a good training rate and allows to achieve a very high accuracy on the training set.
+* The number of epochs was increased to 100 so that training curve achieves plateau for both training and validation sets.
+* **What are some of the important design choices and why were they chosen?** In summary there are 3 important design choices:
+    * One extra convolution layer - increases network capacity
+    * Two dropout layers - reduce overfitting
+    * Outputs of each convolution layer is connected to a fully connected layer
+
 
 If a well known architecture was chosen:
 * What architecture was chosen?
