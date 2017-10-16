@@ -227,5 +227,11 @@ The model was able to correctly guess 3 of the 5 traffic signs, which gives an a
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+This is the output of the first convolution layer of my network:
+
 ![alt text][image14]
 
+There are a few noticeable categories:
+
+* Layers that emphasise edges of the image objects (digits, sign edge)
+* Layers that emphasise inner part of the signan object
