@@ -18,11 +18,11 @@ The goals / steps of this project are the following:
 [image1]: ./report_images/histogram.jpg "Visualization"
 [image2]: ./report_images/Normalisation.jpg "Normalisation"
 [image3]: ./report_images/Augmentation.jpg "Augmentation"
-[image4]: ./report_images/0.jpg "Traffic Sign 1"
-[image5]: ./report_images/1.jpg "Traffic Sign 2"
-[image6]: ./report_images/2.jpg "Traffic Sign 3"
-[image7]: ./report_images/3.jpg "Traffic Sign 4"
-[image8]: ./report_images/4.jpg "Traffic Sign 5"
+[image4]: ./report_images/0_original.jpg "Traffic Sign 1"
+[image5]: ./report_images/1_original.jpg "Traffic Sign 2"
+[image6]: ./report_images/2_original.jpg "Traffic Sign 3"
+[image7]: ./report_images/3_original.jpg "Traffic Sign 4"
+[image8]: ./report_images/4_original.jpg "Traffic Sign 5"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
