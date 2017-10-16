@@ -158,12 +158,23 @@ Based on the model results, training, validation and test accuracies are very cl
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found on the web (resized, the original images are [here](https://github.com/SIakovlev/CarND_Term1_P2/tree/master/test_images)):
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+1) ![alt text][image4]
 
-The first image might be difficult to classify because ...
+Right-of-way at the next intersection. This image should be easy to classify because even after formatting the sign is clearly distinguishable. Just a simple example where neural network should not make a wrong prediction.
+2) ![alt text][image5] 
+
+Road work. Completely unclear what is on the image - just a bunch of pixels that can be interpreted in many ways. However the trainig dataset contains many images of this type, which should mean that neural network will guess it correctly.
+3) ![alt text][image6] 
+
+Stop. The sign here is srinked and after formatting the inscription "Stop" is distinguishable and can be interpreted by neural network as a white line (i.e. "No entry" sign). I picked this picture in order to check robustness of the model to affine transformations. 
+4) ![alt text][image7]
+
+No entry. This picture has some weird white square. The images in dataset did not contain anything similar. Also, the main sign is shifted up therefore it is a good test to check robustness of the model to tranlations.
+5) ![alt text][image8]
+
+Children crossing. Completely unclear what is on the image. Again this picture can be interpreted in many ways. For instance it is similar to the "Bicycles crossing" sign.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -171,28 +182,20 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Right-of-way at the next intersection      		| Right-of-way at the next intersection   									| 
+| Road work     			| Road work 										|
+| Stop					| No entry											|
+| No entry	      		| No entry					 				|
+| Children crossing			| Bicycles crossing    							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This cannot be compared to the accuracy on the test set of because some of the images were taken deliberately difficult
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 
 For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
 
 
 For the second image ... 
