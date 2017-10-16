@@ -28,7 +28,7 @@ The goals / steps of this project are the following:
 [image11]: ./report_images/2.jpg "Traffic Sign 3 guess"
 [image12]: ./report_images/3.jpg "Traffic Sign 4 guess"
 [image13]: ./report_images/4.jpg "Traffic Sign 5 guess"
-
+[image14]: ./report_images/ConvLayer1.jpg "Convolution Layer 1"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -55,11 +55,11 @@ signs data set:
 
 #### 2. Include an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data is spread across the classes
+Here is an exploratory visualisation of the data set. It is a bar chart showing how the data is spread across the classes.
 
 ![alt text][image1]
 
-As we can see, all datasets have similar distributions.
+As you can see, all datasets have similar distributions.
 
 ### Design and Test a Model Architecture
 
@@ -67,11 +67,11 @@ As we can see, all datasets have similar distributions.
 
 Data processing was done in two steps:
 
-* Adaptive histogram equalisation [CLAHE](https://www.wikiwand.com/en/Adaptive_histogram_equalization). This method improves the image contrast by computing histograms for diffrent parts and redistributes lightness over the image. In the case of German Traffic Sign Database, many images are too dark or too bright, hence brightness balancing will potentially help to make datasets more uniform and improve classification accuracy.
+* Adaptive histogram equalisation [CLAHE](https://www.wikiwand.com/en/Adaptive_histogram_equalization). This method improves the image contrast by computing histograms for different parts, and redistributes lightness over the image. In the case of German Traffic Sign Database, many images are too dark or too bright, hence brightness balancing will potentially help to make datasets more uniform and improve classification accuracy.
 
 The described procedure can be done in three steps (taken from [here](https://stackoverflow.com/questions/31998428/opencv-python-equalizehist-colored-image)):
     * Conversion to [YUV color space](https://en.wikipedia.org/wiki/YUV)
-    * CLAHE algorithm is applied to Y channel
+    * CLAHE algorithm applied to Y channel
     * Conversion back to BGR color space
 
 I used `opencv` library functions (in particular `cv2.createCLAHE` for histogram equlisation) and this [tutorial](https://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html).
@@ -82,7 +82,7 @@ Here is the example of appying these steps to a traffic sign image:
 
 ![Data processing][image2]
 
-The German Traffic Sign Database is very nonuniform, i.e. it contains more images of one class than another. In addition the images belonging to one class can be very different from neural network point of view, i.e. the sign can be blurred, or shifted, or seen from different angles (which causes perspective distortion), etc. To model the data variations within a single class I decided to augment a dataset. Data augmentation was done in several ways:
+The German Traffic Sign Database is very nonuniform, i.e. some classes contain more images than others. In addition the images belonging to one class can be very different from a neural network point of view, i.e. the sign can be blurred, or shifted, or seen from different angles (which causes perspective distortion), etc. To model the data variations within a single class I decided to augment a dataset. Data augmentation was done in several ways:
 
 * **rotation** by a random angle (between -20 and 20 degrees) - models basic uncertainty of the sign angle with respect to the picture frame.
 * **translations** - models traffic signs at different positions on the picture
@@ -95,12 +95,12 @@ Here is an example of an original image and an augmented image with methods list
 ![alt text][image3]
 
 The augmented dataset can be obtained in two ways: 
-* Nonbalanced set augmentation. I randomly apply transformations listed above to each element of the original dataset and stack them together (function `set_augment`). The augmented dataset contains two times more images than the original one, i.e. its shape`(69598, 32, 32, 3)` and has the same distribution of sign images across the sign types. 
+* Nonbalanced set augmentation. I randomly apply the transformations listed above to each element of the original dataset and stack them together (function `set_augment`). The augmented dataset contains two times more images than the original one, i.e. its shape`(69598, 32, 32, 3)` and has the same distribution of sign images across the sign types. 
 * Balanced set augmentation (`set_augment_balanced`), i.e. transformations applied to the images of each class in such a way that the augmented set has uniform distribution of images across the classes.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-My final model consisted of the following layers:
+My final model consists of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -128,7 +128,7 @@ My final model consisted of the following layers:
 * Optimiser type: [Adam Optimiser]() - in [CS231n](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
 * Batch size: 128 - I left default value as it worked good for me. Number of epochs: 150 - after about 150 epochs I didn't see any noticeable improvements.
 
-* For data augmentation I prepared 3 augmented datasets with the same distributions as the original one and 1 balanced dataset. During the training, at the start of each epoch we choose one dataset arbitrary. The functions `set_augment(X)` and `set_augment_balanced(X)` choose the method for image augmentation randomly as well. Therefore, since the augmented datasets are different, by randomly choosing them at the start of each epoch we avoid overfitting and keep the augmented part of training dataset constantly changing. The idea of blending nonbalanced dataset with a balanced one is borrowed from [here](https://navoshta.com/traffic-signs-classification/) and slightly simplified. As result, the described procedure forces a neural network to generalise. 
+* For data augmentation I prepared 3 augmented datasets with the same distributions as the original one and 1 balanced dataset. During the training, at the start of each epoch we choose one dataset arbitrarily. The functions `set_augment(X)` and `set_augment_balanced(X)` choose the method for image augmentation randomly as well. Therefore, since the augmented datasets are different, by randomly choosing them at the start of each epoch we avoid overfitting and keep the augmented part of the training dataset constantly changing. The idea of blending nonbalanced dataset with a balanced one is borrowed from [here](https://navoshta.com/traffic-signs-classification/) and slightly simplified. As a result, the described procedure forces a neural network to generalise. 
 
 * Learning rate. The learning rate is reduced with the number of epochs:
     * 0 - 80 epochs: 0.001 
@@ -149,9 +149,9 @@ The architecture design choice:
 
 * The first architecture I tried was LeNet that we used for MNIST dataset in the lab and the accuracy was about 89% on test dataset. There were a few problems I have noticed:
     * Overfitting, i.e. training accuracy was much higher than validation accuracy
-    * Small network capacity, i.e. training accuracy does not achieve at least 99%. In other words this architecture does not allow to quickly learn all the details from given dataset.
-* To avoid overfitting I added two dropout layers (see architecture description above). To resolve the second problem a one convolution layer was added and output of each convolution layer was connected to the first fully connected layer. The last architectural solution was borrowed from the [paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) by Pierre Sermanet and Yann LeCun. The new architecture provides with a good training rate and allows to achieve a very high accuracy on the training set.
-* The number of epochs was increased to 100 so that training curve achieves plateau for both training and validation sets.
+    * Small network capacity, i.e. training accuracy does not achieve at least 99%. In other words this architecture does not allow quick learning of all the details from the given dataset.
+* To avoid overfitting I added two dropout layers (see architecture description above). To resolve the second problem a convolution layer was added and the output of each convolution layer was connected to the first fully connected layer. The last architectural solution was borrowed from the [paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) by Pierre Sermanet and Yann LeCun. The new architecture provides a good training rate and allows you to achieve a very high accuracy on the training set.
+* The number of epochs was increased to 150 so that training curve achieves plateau for both training and validation sets.
 * **What are some of the important design choices and why were they chosen?** In summary there are 3 important design choices:
     * One extra convolution layer - increases network capacity
     * Two dropout layers - reduce overfitting
@@ -164,25 +164,25 @@ Based on the model results, training, validation and test accuracies are very cl
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web (resized, the original images are [here](https://github.com/SIakovlev/CarND_Term1_P2/tree/master/test_images)). Since during the trainig I mainly used unbalanced dataset (see previous section) it is reasonable to expect that my model is biased with respect to the most frequent images from training set of images. In this section I deliberately chose some pictures in such a way that network will be forced to choose the most frequent label, even though it is not correct.
+Here are five German traffic signs that I found on the web (resized, the original images are [here](https://github.com/SIakovlev/CarND_Term1_P2/tree/master/test_images)). Since during the training I mainly used an unbalanced dataset (see previous section), it is reasonable to expect that my model is biased with respect to the most frequent images from the training set of images. In this section I deliberately chose some pictures whereby the network is forced to choose the most frequent labels, even though they are not correct.
 
 * Right-of-way at the next intersection. This image should be easy to classify because even after formatting the sign is clearly distinguishable. Just a simple example where neural network should not make a wrong prediction:
 
 ![alt text][image4]
 
-* Road work. Completely unclear what is on the image - just a bunch of pixels that can be interpreted in many ways. However the trainig dataset contains many images of this type, which should mean that neural network will guess it correctly:
+* Road work. Completely unclear what is on the image - just a bunch of pixels that can be interpreted in many ways. However the training dataset contains many images of this type, which should mean that neural network will guess it correctly:
 
 ![alt text][image5] 
 
-* Stop. The sign here is srinked and after formatting the inscription "Stop" is distinguishable and can be interpreted by neural network as a white line (i.e. "No entry" sign) which is better represented in the training dataset. I also picked this picture in order to check robustness of the model to affine transformations:
+* Stop. The sign here is shrunken and after formatting the inscription "Stop" is distinguishable and can be interpreted by neural network as a white line (i.e. "No entry" sign) which is better represented in the training dataset. I also picked this picture in order to check robustness of the model to affine transformations:
 
 ![alt text][image6] 
 
-* No entry. This picture has some weird white square. The images in dataset did not contain anything similar. However, this picture is well represented in the training set, that is why it should not be a problem. Also, the main sign is shifted up therefore it is a good way to check robustness of the model to tranlations:
+* No entry. This picture has a strange white square. The images in the dataset did not contain anything similar. However, this picture is well represented in the training set, that is why it should not be a problem. Also, the main sign is shifted up therefore it is a good example for checking robustness of the model to tranlations:
 
 ![alt text][image7]
 
-* Children crossing. It is completely unclear what is on the image. Again this picture can be interpreted in many ways. For instance it is similar to the "Bicycles crossing" sign which is better represented in the training set:
+* Children crossing. It is completely unclear what is on the image. Again this picture can be interpreted in many ways. For instance, it is similar to the "Bicycles crossing" sign which is better represented in the training set:
 
 ![alt text][image8]
 
@@ -200,7 +200,7 @@ Here are the results of the prediction:
 | Children crossing			| Bicycles crossing    							|
 
 
-The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This cannot be compared to the accuracy on the test set because some of the images were taken to check how biased my model is. It is noticeable that the model treated a stop sign with corrupted inscription as the "No entry" sign as well as "Children Crossing" as the "Bicycles crossing" sign just because they were seen more often by the network during the training process. The next section provides top 5 gueses, whereform the decision process of the network becomes much clearer.
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This cannot be compared to the accuracy on the test set because some of the images were taken to check how biased my model is. It is noticeable that the model treated a stop sign as undistinguishable, mistaking it for the "No entry" sign, as well as a "Children Crossing" for a "Bicycles crossing" sign, just because they were seen more often by the network during the training process. The next section provides the top 5 guesses, wherefrom the decision process of the network becomes much clearer.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
@@ -208,19 +208,24 @@ The model was able to correctly guess 3 of the 5 traffic signs, which gives an a
 
 ![alt text][image9]
 
-* For the second image, the model recognises it correctly as well, even though the image is very corrupted and can be interpreted in many other ways. The reason why the network identifies it right is because the training set contains many images of this class, i.e. the model is just biased with respect to this class:
+* For the second image, the model recognises it correctly as well, even though the image is very pixelated and can be interpreted in many other ways. The reason why the network identifies it correctly is because the training set contains many images of this class, i.e. the model is just biased with respect to this class:
 
 ![alt text][image10]
 
-* For the third image, the model fails. Here it had two most probable options: stop sign and no entry sign. However during the training it saw images of "No entry" class more often than images with "Stop" sign, therefore it tends to choose "No entry", which is wrong in this case:
+* For the third image, the model fails. Here it had two most probable options: stop sign and no entry sign. However during the training it saw images of "No entry" class more often than images with a "Stop" sign, therefore it tends to choose "No entry", which is wrong in this case:
 
 ![alt text][image11]
 
-* For the forth image, the model...:
+* For the fourth image, the model is very confident and recognises the "No entry" sign correctly despite the fact that it is shifted up:
 
 ![alt text][image12]
+
+* For the fifth image, the model fails again. It is interesting to figure out why. There are two connected black spots at the picture, threfore the network has a quite narrow choice of signs with two objects. As a result, it finds three most probable options for this sign: bike crossing, two lanes or kids crossing. However, according to distribution of the images in the traning set, the network saw a "Bicycle crossing" images way more often then than the other two classes. So it is biased again, hence it picks a wrong option.
+
+![alt text][image13]
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+![alt text][image14]
 
