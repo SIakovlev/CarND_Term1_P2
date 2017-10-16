@@ -231,7 +231,12 @@ This is the output of the first convolution layer of my network:
 
 ![alt text][image14]
 
-There are a few noticeable categories:
+Each layer captured some important feature from the original image. There are a few noticeable categories:
 
-* Layers that emphasise edges of the image objects (digits, sign edge)
-* Layers that emphasise inner part of the signan object
+* Layers that emphasise edges of the image objects (digits, sign edge), for instance maps 0, 2, 12, 13
+* Layers that emphasise one part of the edges more than others: 10, 3, 4
+* Layers that emphasise details in the opposite way: 12 and 14, 6 and 2
+* Some layers emphasise just digits, wehreas others emphasis both digits and sign edge: 12 and 2
+* Some other interesting examples such as: 
+    * 16 and 17 layers captured inner and outer edges of digits and sign edges respectively. The same for 8 and 0.
+    * Layers 3 and 4 captured details in othogonal directions
