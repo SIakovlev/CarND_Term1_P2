@@ -5,3 +5,4 @@
 * `project_report.md` - project report file
 * `test_images/` - internet images for NN testing
 * `report_images/` - images generated in `Traffic_Sign_Classifier.ipynb` for the report
+* `3stages_rgb_v3.` - CNN trained model
