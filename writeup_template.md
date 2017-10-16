@@ -76,19 +76,21 @@ Here is the example of appying these steps to a traffic sign image:
 
 ![Data processing][image2]
 
-The German Traffic Sign Database is very nonuniform, i.e. it contains more images of one traffic sign type than another. In addition the images belonging to one class can be very different from neural network point of view, i.e. the sign can be blurred, or shifted, or seen from different angles (which causes perspective distortion), etc. To model the data variations within a single class I decided to augment a dataset. Data augmentation was done in several ways:
+The German Traffic Sign Database is very nonuniform, i.e. it contains more images of one class than another. In addition the images belonging to one class can be very different from neural network point of view, i.e. the sign can be blurred, or shifted, or seen from different angles (which causes perspective distortion), etc. To model the data variations within a single class I decided to augment a dataset. Data augmentation was done in several ways:
 
 * **rotation** by a random angle (between -20 and 20 degrees) - models basic uncertainty of the sign angle with respect to the picture frame.
 * **translations** - models traffic signs at different positions on the picture
 * **affine transformation** - models perspective distortion effect ()
 * **brightness variation** - models variation of brightness level for original dataset
-* their combinations
+* their combinations (see function `image_augment(X)`)
 
 Here is an example of an original image and an augmented image with methods listed above:
 
 ![alt text][image3]
 
-To get the augmented dataset I randomly apply transformations listed above to each element of the original dataset and stack them together. The augmented dataset contains two times more images than the original one, i.e. its shape`(69598, 32, 32, 3)`.
+The augmented dataset can be obtained in two ways: 
+* Nonbalanced set augmentation. I randomly apply transformations listed above to each element of the original dataset and stack them together (function `set_augment`). The augmented dataset contains two times more images than the original one, i.e. its shape`(69598, 32, 32, 3)` and has the same distribution of sign images across the sign types. 
+* Balanced set augmentation (`set_augment_balanced`), i.e. transformations applied to the images of each class in such a way that the augmented set has uniform distribution of images across the classes.
 
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
@@ -118,26 +120,24 @@ My final model consisted of the following layers:
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 * Optimiser type: [Adam Optimiser]() - in [CS231n](http://cs231n.github.io/neural-networks-3/) Adam is suggested as a default algorithm to use for majority of applications. In the original [paper](https://arxiv.org/abs/1412.6980) it shows the best performance for MNIST dataset.
-* Batch size: 128 - I left default value as it worked good for me. Number of epochs: 100 - after about 100 epochs I didn't see any noticeable improvements.
+* Batch size: 128 - I left default value as it worked good for me. Number of epochs: 150 - after about 150 epochs I didn't see any noticeable improvements.
 
-* Data augmentation is done at each epoch. The function `set_augment(X)` randomly chooses the method for image augmentation. Therefore, each augmentation is random, which allows to avoid overfitting and keep the augmented part of training dataset constantly changing. As result, it forces a neural network to generalise. The disadvantage of this method is that for large datasets it might be very demanding to memory. The augmentation scheme is the following:
-    * 0 - 30 epochs: training dataset is changing
-    * 30 - 60 epochs: training dataset is changing
-    * 60 - 100 epochs: training dataset is constant
+* For data augmentation I prepared 3 augmented datasets with the same distributions as the original one and 1 balanced dataset. During the training, at the start of each epoch we choose one dataset arbitrary. The functions `set_augment(X)` and `set_augment_balanced(X)` choose the method for image augmentation randomly as well. Therefore, since the augmented datasets are different, by randomly choosing them at the start of each epoch we avoid overfitting and keep the augmented part of training dataset constantly changing. The idea of blending nonbalanced dataset with a balanced one is borrowed from [here](https://navoshta.com/traffic-signs-classification/) and slightly simplified. As result, the described procedure forces a neural network to generalise. 
+
 * Learning rate. The learning rate is reduced with the number of epochs:
-    * 0 - 30 epochs: 0.001 
-    * 30 - 60 epochs: 0.0001
-    * 60 - 100 epochs: 0.00001
+    * 0 - 80 epochs: 0.001 
+    * 80 - 120 epochs: 0.0001
+    * 120 - 150 epochs: 0.00001
   
-  The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it helps with improving training accuracy. The `Traffic_Sign_Classifier.ipynb` file contains training information at each epoch and it is noticeable that after lowering training rate, the accuracy on training set grows monotonically.
+  The idea behind it is to switch to a lower learning rate when training process achieves plateau. By doing so it helps with improving training accuracy. The `Traffic_Sign_Classifier.ipynb` file contains training information at each epoch and it is noticeable that after lowering training rate, the accuracy on training set grows.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* **training set** accuracy of 100%
-* validation set accuracy of 98.5% 
-* test set accuracy of 98.6%
-* Time: it took about one hour to get these results on g2.2xlarge machine.
+* **training set** accuracy of 99.9%
+* **validation set** accuracy of 98.8% 
+* **test set** accuracy of 97.8%
+* Time: it took less than one hour to get these results on g2.2xlarge machine.
 
 The architecture design choice:
 
@@ -151,8 +151,8 @@ The architecture design choice:
     * Two dropout layers - reduce overfitting
     * Outputs of each convolution layer is connected to a fully connected layer
 
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+* **How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?**
+Based on the model results, training, validation and test accuracies are very close to each other and are about 98-99% each. This means that the network generalised dataset quite well. However it is important to keep in mind that the quality of neural network model heavily depends on the dataset: its diversity, size, distributions, etc. Therefore if the dataset in not representing the modelling objective good enough, then even good results for each set do not mean that the model is working well.
 
 ### Test a Model on New Images
 
