@@ -23,6 +23,12 @@ The goals / steps of this project are the following:
 [image6]: ./report_images/2_original.jpg "Traffic Sign 3"
 [image7]: ./report_images/3_original.jpg "Traffic Sign 4"
 [image8]: ./report_images/4_original.jpg "Traffic Sign 5"
+[image9]: ./report_images/0.jpg "Traffic Sign 1 guess"
+[image10]: ./report_images/1.jpg "Traffic Sign 2 guess"
+[image11]: ./report_images/2.jpg "Traffic Sign 3 guess"
+[image12]: ./report_images/3.jpg "Traffic Sign 4 guess"
+[image13]: ./report_images/4.jpg "Traffic Sign 5 guess"
+
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -152,29 +158,34 @@ The architecture design choice:
     * Outputs of each convolution layer is connected to a fully connected layer
 
 * **How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?**
-Based on the model results, training, validation and test accuracies are very close to each other and are about 98-99% each. This means that the network generalised dataset quite well. However it is important to keep in mind that the quality of neural network model heavily depends on the dataset: its diversity, size, distributions, etc. Therefore if the dataset in not representing the modelling objective good enough, then even good results for each set do not mean that the model is working well.
+Based on the model results, training, validation and test accuracies are very close to each other and are about 98-99% each. This means that the network generalised dataset quite well. However it is important to keep in mind that the quality of neural network model heavily depends on the dataset: its diversity, size, distributions, etc. Therefore if the dataset in not representing the modelling objective good enough, then even good results for each set do not mean that the model is working well. The next section is demonstrating this.
 
 ### Test a Model on New Images
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web (resized, the original images are [here](https://github.com/SIakovlev/CarND_Term1_P2/tree/master/test_images)):
+Here are five German traffic signs that I found on the web (resized, the original images are [here](https://github.com/SIakovlev/CarND_Term1_P2/tree/master/test_images)). Since during the trainig I mainly used unbalanced dataset (see previous section) it is reasonable to expect that my model is biased with respect to the most frequent images from training set of images. In this section I deliberately chose some pictures in such a way that network will be forced to choose the most frequent label, even though it is not correct.
 
-1) ![alt text][image4]
+* Right-of-way at the next intersection. This image should be easy to classify because even after formatting the sign is clearly distinguishable. Just a simple example where neural network should not make a wrong prediction:
 
-Right-of-way at the next intersection. This image should be easy to classify because even after formatting the sign is clearly distinguishable. Just a simple example where neural network should not make a wrong prediction.
-2) ![alt text][image5] 
+![alt text][image4]
 
-Road work. Completely unclear what is on the image - just a bunch of pixels that can be interpreted in many ways. However the trainig dataset contains many images of this type, which should mean that neural network will guess it correctly.
-3) ![alt text][image6] 
+* Road work. Completely unclear what is on the image - just a bunch of pixels that can be interpreted in many ways. However the trainig dataset contains many images of this type, which should mean that neural network will guess it correctly:
 
-Stop. The sign here is srinked and after formatting the inscription "Stop" is distinguishable and can be interpreted by neural network as a white line (i.e. "No entry" sign). I picked this picture in order to check robustness of the model to affine transformations. 
-4) ![alt text][image7]
+![alt text][image5] 
 
-No entry. This picture has some weird white square. The images in dataset did not contain anything similar. Also, the main sign is shifted up therefore it is a good test to check robustness of the model to tranlations.
-5) ![alt text][image8]
+* Stop. The sign here is srinked and after formatting the inscription "Stop" is distinguishable and can be interpreted by neural network as a white line (i.e. "No entry" sign) which is better represented in the training dataset. I also picked this picture in order to check robustness of the model to affine transformations:
 
-Children crossing. Completely unclear what is on the image. Again this picture can be interpreted in many ways. For instance it is similar to the "Bicycles crossing" sign.
+![alt text][image6] 
+
+* No entry. This picture has some weird white square. The images in dataset did not contain anything similar. However, this picture is well represented in the training set, that is why it should not be a problem. Also, the main sign is shifted up therefore it is a good way to check robustness of the model to tranlations:
+
+![alt text][image7]
+
+* Children crossing. It is completely unclear what is on the image. Again this picture can be interpreted in many ways. For instance it is similar to the "Bicycles crossing" sign which is better represented in the training set:
+
+![alt text][image8]
+
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -189,16 +200,25 @@ Here are the results of the prediction:
 | Children crossing			| Bicycles crossing    							|
 
 
-The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This cannot be compared to the accuracy on the test set of because some of the images were taken deliberately difficult
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This cannot be compared to the accuracy on the test set because some of the images were taken to check how biased my model is. It is noticeable that the model treated a stop sign with corrupted inscription as the "No entry" sign as well as "Children Crossing" as the "Bicycles crossing" sign just because they were seen more often by the network during the training process. The next section provides top 5 gueses, whereform the decision process of the network becomes much clearer.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+* For the first image, the model is absolutely sure that this is a "Right-of-way at the next intersection" sign, which is expectable. The top five soft max probabilities were:
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+![alt text][image9]
 
+* For the second image, the model recognises it correctly as well, even though the image is very corrupted and can be interpreted in many other ways. The reason why the network identifies it right is because the training set contains many images of this class, i.e. the model is just biased with respect to this class:
 
-For the second image ... 
+![alt text][image10]
+
+* For the third image, the model fails. Here it had two most probable options: stop sign and no entry sign. However during the training it saw images of "No entry" class more often than images with "Stop" sign, therefore it tends to choose "No entry", which is wrong in this case:
+
+![alt text][image11]
+
+* For the forth image, the model...:
+
+![alt text][image12]
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 #### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
